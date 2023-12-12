@@ -61,7 +61,7 @@ query = "Alter table clients modify column client_age int not null"
 conn.execute(text(query))
 
 # Update Client Age from the Clients table using SQLAlchemy
-stmt = cli.update().where(cli.c.client_id == 1).values(client_age = 4.5)
+stmt = cli.update().where(cli.c.client_id == 1).values(client_age = 4)
 conn.execute(stmt)
 
 stmt = cli.update().where(cli.c.client_id == 2).values(client_age = 1)
