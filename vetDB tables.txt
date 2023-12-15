@@ -26,9 +26,9 @@ CREATE TABLE clients (
                 client_name VARCHAR(100) NOT NULL,
                 client_species VARCHAR(100) NOT NULL,
                 client_breed VARCHAR(100) NOT NULL,
-		client_sex VARCHAR(100) NOT NULL,
+                client_sex VARCHAR(100) NOT NULL,
                 client_age INT NOT NULL,
-                treatment VARCHAR(100) NOT NULL,
+                status VARCHAR(100) NOT NULL,
                 PRIMARY KEY (client_id, owner_id)
 );
 
@@ -37,7 +37,7 @@ CREATE TABLE appointment (
                 appointment_id INT NOT NULL,
                 client_id INT NOT NULL,
                 owner_id INT NOT NULL,
-                veterinarian_id INT NOT NULL,
+                veterinarian_id INT,
                 appointment_date VARCHAR(10) NOT NULL,
                 appointment_time VARCHAR(5) NOT NULL,
                 reason VARCHAR(100) NOT NULL,
@@ -47,13 +47,13 @@ CREATE TABLE appointment (
 
 CREATE TABLE billing (
                 billing_id INT NOT NULL,
-                appointment_id INT NOT NULL,
+                appointment_id INT,
                 client_id INT NOT NULL,
                 owner_id INT NOT NULL,
-                veterinarian_id INT NOT NULL,
+                veterinarian_id INT,
                 billing_date VARCHAR(10) NOT NULL,
                 service VARCHAR(100) NOT NULL,
-                cost DECIMAL(16,2) NOT NULL,
+                cost DECIMAL(3) NOT NULL,
                 PRIMARY KEY (billing_id, appointment_id, client_id, owner_id, veterinarian_id)
 );
 
@@ -61,23 +61,23 @@ CREATE TABLE billing (
 ALTER TABLE appointment ADD CONSTRAINT veterinarian_appointment_fk
 FOREIGN KEY (veterinarian_id)
 REFERENCES veterinarian (veterinarian_id)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+ON DELETE CASCADE
+ON UPDATE CASCADE;
 
-ALTER TABLE clients ADD CONSTRAINT owner_clients_fk
+ALTER TABLE clients ADD CONSTRAINT clients_owner_fk
 FOREIGN KEY (owner_id)
 REFERENCES owner (owner_id)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+ON DELETE CASCADE
+ON UPDATE CASCADE;
 
-ALTER TABLE appointment ADD CONSTRAINT clients_appointment_fk
-FOREIGN KEY (client_id, owner_id)
-REFERENCES clients (client_id, owner_id)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+ALTER TABLE appointment ADD CONSTRAINT appointment_clients_fk
+FOREIGN KEY (owner_id, client_id)
+REFERENCES clients (owner_id, client_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
 
 ALTER TABLE billing ADD CONSTRAINT appointment_billing_fk
-FOREIGN KEY (appointment_id, client_id, owner_id, veterinarian_id)
-REFERENCES appointment (appointment_id, client_id, owner_id, veterinarian_id)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+FOREIGN KEY (veterinarian_id, appointment_id, client_id, owner_id)
+REFERENCES appointment (veterinarian_id, appointment_id, client_id, owner_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
